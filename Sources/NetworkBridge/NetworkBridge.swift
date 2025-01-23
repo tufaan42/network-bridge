@@ -1,6 +1,12 @@
 import Foundation
 
 class NetworkBridge {
+    let errorMapper: ErrorMapper
+    
+    init(errorMapper: ErrorMapper = DefaultErrorMapper()) {
+        self.errorMapper = errorMapper
+    }
+    
     func get<T: Codable>(url: String, completion: @escaping (Result<T, ApiError>) -> Void) {
         // Validate URL
         guard let url = URL(string: url) else {
@@ -16,7 +22,7 @@ class NetworkBridge {
             let statusCode = (response as? HTTPURLResponse)?.statusCode
 
             // Map errors using the ErrorMapper
-            if let mappedError = ErrorMapper.mapError(statusCode: statusCode, error: error) as? ApiError {
+            if let mappedError = self.errorMapper.mapError(statusCode: statusCode, error: error) as? ApiError {
                 completion(.failure(mappedError))
                 return
             }
@@ -67,7 +73,7 @@ class NetworkBridge {
                 let statusCode = (response as? HTTPURLResponse)?.statusCode
 
                 // Map errors using the ErrorMapper
-                if let mappedError = ErrorMapper.mapError(statusCode: statusCode, error: error) as? ApiError {
+                if let mappedError = self.errorMapper.mapError(statusCode: statusCode, error: error) as? ApiError {
                     completion(.failure(mappedError))
                     return
                 }
