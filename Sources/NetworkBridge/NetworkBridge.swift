@@ -153,6 +153,48 @@ class NetworkBridge {
             task.resume()
         }
     
+    // MARK: DELETE Request
+    func delete<T: Codable>(
+        url: String,
+        completion: @escaping (Result<T, ApiError>) -> Void
+    ) {
+        // Validate URL
+        guard let url = URL(string: url) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+
+        // Create URLRequest
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        setCommonHeaders(request: &request)
+
+        // Perform network request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            let statusCode = (response as? HTTPURLResponse)?.statusCode
+
+            // Map errors using the ErrorMapper
+            if let mappedError = self.errorMapper.mapError(statusCode: statusCode, error: error) as? ApiError {
+                completion(.failure(mappedError))
+                return
+            }
+
+            // Decode response
+            guard let data = data else {
+                completion(.failure(.unknown))
+                return
+            }
+
+            do {
+                let result = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(result))
+            } catch {
+                completion(.failure(.decodingFailed))
+            }
+        }
+        task.resume()
+    }
+    
     private func setCommonHeaders(request: inout URLRequest) {
         for header in commonHeaders {
             request.addValue(header.value, forHTTPHeaderField: header.key)
