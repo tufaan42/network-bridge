@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ApiError: Error {
+public enum ApiError: Error {
     case invalidURL
     case badRequest       // 400
     case unauthorized     // 401

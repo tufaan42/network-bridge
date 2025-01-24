@@ -5,6 +5,6 @@
 //  Created by Rafat Meraz on 23/1/25.
 //
 
-protocol ErrorMapper {
+public protocol ErrorMapper {
     func mapError(statusCode: Int?, error: Error?) -> ApiError
 }
