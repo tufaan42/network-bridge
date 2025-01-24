@@ -7,8 +7,8 @@
 
 import Foundation
 
-class GetRequest: BaseRequest {
-    func execute<T: Codable>(url: String, completion: @escaping (Result<T, ApiError>) -> Void) {
+public class GetRequest: BaseRequest {
+    public func execute<T: Codable>(url: String, completion: @escaping (Result<T, ApiError>) -> Void) {
         guard let url = URL(string: url) else {
             completion(.failure(.invalidURL))
             return

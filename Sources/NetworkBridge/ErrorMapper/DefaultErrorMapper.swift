@@ -5,8 +5,11 @@
 //  Created by Rafat Meraz on 24/1/25.
 //
 
-struct DefaultErrorMapper : ErrorMapper {
-    func mapError(statusCode: Int?, error: Error?) -> ApiError {
+public struct DefaultErrorMapper : ErrorMapper {
+    
+    public init() {}
+    
+    public func mapError(statusCode: Int?, error: Error?) -> ApiError {
         if let error = error {
             return .networkError(error)
         }

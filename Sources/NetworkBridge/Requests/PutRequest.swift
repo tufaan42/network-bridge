@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PutRequest: BaseRequest {
+public class PutRequest: BaseRequest {
     func execute<T: Codable, U: Codable>(
         url: String,
         body: U,

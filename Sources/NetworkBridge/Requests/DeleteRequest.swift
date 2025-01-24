@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DeleteRequest: BaseRequest {
+public class DeleteRequest: BaseRequest {
     func execute<T: Codable>(
         url: String,
         completion: @escaping (Result<T, ApiError>) -> Void

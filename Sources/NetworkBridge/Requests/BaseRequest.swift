@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BaseRequest {
+public class BaseRequest {
     let errorMapper: ErrorMapper
     let commonHeaders: [String: String]
     
