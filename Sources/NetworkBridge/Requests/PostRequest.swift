@@ -31,11 +31,22 @@ public class PostRequest: BaseRequest {
         }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            if let apiError = self.handleError(statusCode: statusCode, error: error) {
-                completion(.failure(apiError))
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(.unknown))
                 return
             }
+
+            let statusCode = httpResponse.statusCode
+            
+            if !(200..<300).contains(statusCode) {
+                if let apiError = self.handleError(statusCode: statusCode, error: error) {
+                    completion(.failure(apiError))
+                } else {
+                    completion(.failure(.unknown))
+                }
+                return
+            }
+            
             
             guard let data = data else {
                 completion(.failure(.unknown))
